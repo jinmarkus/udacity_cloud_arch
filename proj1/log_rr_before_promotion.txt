@@ -1,0 +1,147 @@
+PS C:\Users\lazar> ssh -i C:\dev\udacity_cloud_arch\keypairs\proj1-key-pair2.pem ec2-user@ec2-18-218-238-134.us-east-2.compute.amazonaws.com
+
+       __|  __|_  )
+       _|  (     /   Amazon Linux 2 AMI
+      ___|\___|___|
+
+https://aws.amazon.com/amazon-linux-2/
+[ec2-user@ip-10-2-10-97 ~]$ sudo su
+[root@ip-10-2-10-97 ec2-user]# yum install -y mysql
+Loaded plugins: extras_suggestions, langpacks, priorities, update-motd
+Resolving Dependencies
+--> Running transaction check
+---> Package mariadb.x86_64 1:5.5.68-1.amzn2 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+======================================================================================================================== Package                  Arch                    Version                             Repository                   Size
+========================================================================================================================Installing:
+ mariadb                  x86_64                  1:5.5.68-1.amzn2                    amzn2-core                  8.8 M
+
+Transaction Summary
+========================================================================================================================Install  1 Package
+
+Total download size: 8.8 M
+Installed size: 49 M
+Downloading packages:
+mariadb-5.5.68-1.amzn2.x86_64.rpm                                                                | 8.8 MB  00:00:00
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : 1:mariadb-5.5.68-1.amzn2.x86_64                                                                      1/1
+  Verifying  : 1:mariadb-5.5.68-1.amzn2.x86_64                                                                      1/1
+
+Installed:
+  mariadb.x86_64 1:5.5.68-1.amzn2
+
+Complete!
+[root@ip-10-2-10-97 ec2-user]# mysql -u starlazar4u2 -ph database-2.cfmncftdfc0u.us-east-2.rds.amazonaws.com
+ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+[root@ip-10-2-10-97 ec2-user]# mysql -u admin -ph database-2.cfmncftdfc0u.us-east-2.rds.amazonaws.com
+ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+[root@ip-10-2-10-97 ec2-user]# mysql -u admin -p -h database-2.cfmncftdfc0u.us-east-2.rds.amazonaws.com
+Enter password:
+ERROR 2059 (HY000): Authentication plugin 'caching_sha2_password' cannot be loaded: /usr/lib64/mysql/plugin/caching_sha2_password.so: cannot open shared object file: No such file or directory
+[root@ip-10-2-10-97 ec2-user]# mysql -u starlazar4u2 -p -h database-2.cfmncftdfc0u.us-east-2.rds.amazonaws.com
+Enter password:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MySQL connection id is 31
+Server version: 8.0.20 Source distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MySQL [(none)]> INSERT INTO example_db(
+    ->     -> (tutorial_id, tutorial_title)
+    ->     -> VALUES
+    ->
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> (tutorial_id, tutorial_title)
+    -> VALUES' at line 2
+MySQL [(none)]> INSERT INTO example_db((tutorial_id2, tutorial_title2), VALUES, ("102", "Learn SQL2");
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'tutorial_id2, tutorial_title2), VALUES, ("102", "Learn SQL2")' at line 1
+MySQL [(none)]> INSERT INTO example_db((tutorial_id2, tutorial_title2), VALUES, ("102", "Learn SQL2"));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'tutorial_id2, tutorial_title2), VALUES, ("102", "Learn SQL2"))' at line 1
+MySQL [(none)]> INSERT INTO example_db(tutorial_id, tutorial_title) VALUES ("102", "Learning SQL continued");
+ERROR 1046 (3D000): No database selected
+MySQL [(none)]> INSERT INTO `example_db`(tutorial_id, tutorial_title) VALUES ("102", "Learning SQL continued");
+ERROR 1046 (3D000): No database selected
+MySQL [(none)]> show databases:
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ':' at line 1
+MySQL [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| udacity            |
++--------------------+
+4 rows in set (0.00 sec)
+
+MySQL [(none)]> USE udacity
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+MySQL [udacity]> INSERT INTO `example_db`(tutorial_id, tutorial_title) VALUES ("102", "Learning SQL continued");
+ERROR 1290 (HY000): The MySQL server is running with the --read-only option so it cannot execute this statement
+MySQL [udacity]> INSERT INTO example_db(tutorial_id, tutorial_title) VALUES ("102", "Learning SQL continued");
+ERROR 1290 (HY000): The MySQL server is running with the --read-only option so it cannot execute this statement
+MySQL [udacity]> SELECT "101"
+    -> ;
++-----+
+| 101 |
++-----+
+| 101 |
++-----+
+1 row in set (0.00 sec)
+
+MySQL [udacity]> SELECT "Learn SQL";
++-----------+
+| Learn SQL |
++-----------+
+| Learn SQL |
++-----------+
+1 row in set (0.00 sec)
+
+MySQL [udacity]> SHOW VARIALBES;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'VARIALBES' at line 1
+MySQL [udacity]> SHOW VARIABLES;
++----------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Variable_name                                            | Value
+
+
+
+                                  |
++----------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| activate_all_roles_on_login                              | OFF
+
+
+
+                                  |
+| admin_address                                            |
+
+
+
+                                  |
+| admin_port                                               | 33062
+
+
+
+... (I deleted a bunch of the table data since there was a lot; it didn't show the entry because I think I entered data in incorrectly
+    this was a method I found from a Mentor suggestion, but I think the idea is clear, I can't write to the DB but I can read from it)
+
+
++----------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+560 rows in set (0.00 sec)
+
+MySQL [udacity]> SHOW VARIABLES LIKE '101';
+Empty set (0.00 sec)
+
+MySQL [udacity]> SHOW VARIABLES LIKE 'Learn SQL';
+Empty set (0.01 sec)
